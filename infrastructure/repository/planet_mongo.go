@@ -18,9 +18,9 @@ func NewPlanetMongoDB(db *mgo.Database, collection string) *PlanetMongoDB {
 	}
 }
 
-func (r *PlanetMongoDB) Get(id string) (*entity.Planet, error) {
+func (r *PlanetMongoDB) Get(ID entity.ID) (*entity.Planet, error) {
 	var planet *entity.Planet
-	err := r.db.C(r.collection).FindId(bson.ObjectIdHex(id)).One(&planet)
+	err := r.db.C(r.collection).FindId(ID).One(&planet)
 	return planet, err
 }
 
@@ -42,7 +42,7 @@ func (r *PlanetMongoDB) Create(e *entity.Planet) (*entity.Planet, error) {
 	return e, err
 }
 
-func (r *PlanetMongoDB) Delete(id string) error {
-	err := r.db.C(r.collection).RemoveId(bson.ObjectIdHex(id))
+func (r *PlanetMongoDB) Delete(ID entity.ID) error {
+	err := r.db.C(r.collection).RemoveId(ID)
 	return err
 }

@@ -3,14 +3,14 @@ package planet
 import "github.com/bosamatheus/star-wars/entity"
 
 type Reader interface {
-	Get(id string) (*entity.Planet, error)
+	Get(id entity.ID) (*entity.Planet, error)
 	Search(name string) ([]*entity.Planet, error)
 	List() ([]*entity.Planet, error)
 }
 
 type Writer interface {
 	Create(e *entity.Planet) (*entity.Planet, error)
-	Delete(id string) error
+	Delete(id entity.ID) error
 }
 
 type Repository interface {
@@ -23,9 +23,9 @@ type Client interface {
 }
 
 type UseCase interface {
-	GetPlanet(id string) (*entity.Planet, error)
+	GetPlanet(id entity.ID) (*entity.Planet, error)
 	SearchPlanets(name string) ([]*entity.Planet, error)
 	ListPlanets() ([]*entity.Planet, error)
 	CreatePlanet(name, climate, terrain string) (*entity.Planet, error)
-	DeletePlanet(id string) error
+	DeletePlanet(id entity.ID) error
 }

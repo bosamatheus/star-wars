@@ -9,6 +9,7 @@ import (
 	"github.com/bosamatheus/star-wars/usecase/planet"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func MakePlanetHandlers(r *mux.Router, n negroni.Negroni, service planet.UseCase) {
@@ -36,7 +37,8 @@ func MakePlanetHandlers(r *mux.Router, n negroni.Negroni, service planet.UseCase
 func getPlanet(service planet.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		data, err := service.GetPlanet(mux.Vars(r)["id"])
+		ID := bson.ObjectIdHex(mux.Vars(r)["id"])
+		data, err := service.GetPlanet(ID)
 		if err != nil && err != entity.ErrNotFound {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error: " + err.Error()))
@@ -169,7 +171,8 @@ func createPlanet(service planet.UseCase) http.Handler {
 func deletePlanet(service planet.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		err := service.DeletePlanet(mux.Vars(r)["id"])
+		ID := bson.ObjectIdHex(mux.Vars(r)["id"])
+		err := service.DeletePlanet(ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error: " + err.Error()))

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type StarWarsClient struct {
@@ -18,7 +19,7 @@ func NewStarWarsClient(baseUrl string) *StarWarsClient {
 }
 
 func (r *StarWarsClient) Search(name string) (int, error) {
-	resp, err := http.Get(r.baseUrl + "?search=" + name)
+	resp, err := http.Get(r.baseUrl + "?search=" + strings.ToLower(name))
 	log.Printf("SWAPI Status: %s\n", resp.Status)
 	if err != nil {
 		return 0, err

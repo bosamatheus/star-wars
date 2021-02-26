@@ -16,8 +16,8 @@ func NewService(r Repository, client Client) *Service {
 	}
 }
 
-func (s *Service) GetPlanet(id string) (*entity.Planet, error) {
-	return s.repo.Get(id)
+func (s *Service) GetPlanet(ID entity.ID) (*entity.Planet, error) {
+	return s.repo.Get(ID)
 }
 
 func (s *Service) SearchPlanets(name string) ([]*entity.Planet, error) {
@@ -40,13 +40,13 @@ func (s *Service) CreatePlanet(name, climate, terrain string) (*entity.Planet, e
 	return s.repo.Create(e)
 }
 
-func (s *Service) DeletePlanet(id string) error {
-	u, err := s.GetPlanet(id)
+func (s *Service) DeletePlanet(ID entity.ID) error {
+	e, err := s.GetPlanet(ID)
+	if e == nil {
+		return entity.ErrNotFound
+	}
 	if err != nil {
 		return entity.ErrInvalidEntity
 	}
-	if u == nil {
-		return entity.ErrNotFound
-	}
-	return s.repo.Delete(id)
+	return s.repo.Delete(e.ID)
 }
