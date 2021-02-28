@@ -1,7 +1,7 @@
 # Star Wars API
 
 API developed in Go that adds, lists and removes planets from the Star Wars universe.
-It also consumes [SWAPI]('https://swapi.dev/') to get how many films did the planet appeared.
+It also consumes [SWAPI](https://swapi.dev/) to get how many films did the planet appeared.
 
 ## Technologies
 
