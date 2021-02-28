@@ -17,6 +17,13 @@ It also consumes [SWAPI](https://swapi.dev/) to get how many films did the plane
 
 ## API requests 
 
+### Generate a new JWT
+
+```
+curl --location --request GET 'http://localhost:8080/api/v1/auth/token' \
+--header 'client_id: secret'
+```
+
 ### Create a new planet
 
 ```
@@ -29,6 +36,7 @@ curl --location --request POST 'http://localhost:8080/api/v1/planets' \
     "terrain": "caves, desert, mountains, volcanoes"
 }'
 ```
+
 ### Get planet
 
 ```
@@ -49,6 +57,7 @@ curl --location --request GET 'http://localhost:8080/api/v1/planets/search/Tatoo
 curl --location --request GET 'http://localhost:8080/api/v1/planets' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJjbGllbnRfaWQiOiJzZWNyZXQiLCJleHAiOjE2MTQ1NTAzNzN9.invpFQkLVy9agbnD4gvxD9vvtmd6AXX7hidqlvjwH_k'
 ```
+
 ### Delete a planet
 
 ```
