@@ -2,6 +2,7 @@ package config
 
 const (
 	API_PORT           = 8080
+	API_SECRET         = "secret"
 	MONGODB_HOST       = "localhost"
 	MONGODB_STAR_WARS  = "star_wars_db"
 	MONGODB_COLLECTION = "planets"

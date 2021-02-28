@@ -11,6 +11,7 @@ import (
 	"github.com/bosamatheus/star-wars/api/middleware"
 	"github.com/bosamatheus/star-wars/config"
 	"github.com/bosamatheus/star-wars/infrastructure/repository"
+	"github.com/bosamatheus/star-wars/pkg/auth"
 	"github.com/bosamatheus/star-wars/usecase/planet"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/context"
@@ -20,7 +21,7 @@ import (
 
 func main() {
 	var err error
-	// MongoDB
+	// DB
 	session, err := mgo.Dial(config.MONGODB_HOST)
 	if err != nil {
 		log.Fatal(err)
@@ -30,20 +31,26 @@ func main() {
 	// Repositories
 	planetRepo := repository.NewPlanetMongoDB(dbMongo, config.MONGODB_COLLECTION)
 	StarWarsClient := repository.NewStarWarsClient(config.SWAPI_BASE_URL)
+
+	// Services
+	authService, err := auth.NewAuthService(config.API_SECRET)
 	planetService := planet.NewService(planetRepo, StarWarsClient)
 
 	// Handlers
-	n := negroni.New(
+	middlewareAuth := negroni.New(
+		negroni.HandlerFunc(middleware.Cors),
+		negroni.HandlerFunc(middleware.Auth(authService)),
+		negroni.NewLogger(),
+	)
+	middleware := negroni.New(
 		negroni.HandlerFunc(middleware.Cors),
 		negroni.NewLogger(),
 	)
 
-	// Router
+	// Routers
 	r := mux.NewRouter()
-
-	// Planets
-	handler.MakePlanetHandlers(r, *n, planetService)
-
+	handler.MakeAuthHandlers(r, *middleware, authService)
+	handler.MakePlanetHandlers(r, *middlewareAuth, planetService)
 	http.Handle("/", r)
 	r.HandleFunc("/api/v1/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)

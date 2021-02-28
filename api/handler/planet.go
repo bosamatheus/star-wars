@@ -57,6 +57,7 @@ func getPlanet(service planet.UseCase) http.Handler {
 			Films:   data.Films,
 			Terrain: data.Terrain,
 		}
+		w.WriteHeader(http.StatusOK)
 		if err := json.NewEncoder(w).Encode(toJ); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error: " + err.Error()))
@@ -91,6 +92,7 @@ func searchPlanets(service planet.UseCase) http.Handler {
 				Terrain: d.Terrain,
 			})
 		}
+		w.WriteHeader(http.StatusOK)
 		if err := json.NewEncoder(w).Encode(toJ); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error: " + err.Error()))
@@ -125,6 +127,7 @@ func listPlanets(service planet.UseCase) http.Handler {
 				Terrain: d.Terrain,
 			})
 		}
+		w.WriteHeader(http.StatusOK)
 		if err := json.NewEncoder(w).Encode(toJ); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error: " + err.Error()))
@@ -173,12 +176,10 @@ func deletePlanet(service planet.UseCase) http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 		ID := bson.ObjectIdHex(mux.Vars(r)["id"])
 		err := service.DeletePlanet(ID)
+		w.WriteHeader(http.StatusNoContent)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error: " + err.Error()))
-			return
 		}
-
-		w.WriteHeader(http.StatusNoContent)
 	})
 }
